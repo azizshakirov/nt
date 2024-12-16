@@ -26,11 +26,14 @@ def insert():
 
     if request.method == 'POST':
         flash("muvaffaqiyatli saqlandi")
+        
         name = request.form['name']
         email = request.form['email']
         phone = request.form['phone']
-        # student = (id_data, name, email, phone)
-        # students.append(student)
+        student = (name, email, phone)
+
+        cur = mysql.connection.cursor()
+        cur.execute("INSERT INTO students (name, email, phone) VALUES (%s, %s, %s)", student)
         return redirect(url_for('index'))
     
 
