@@ -23,7 +23,6 @@ def index():
 
 @app.route('/insert', methods = ["POST"])
 def insert():
-    #coment
     if request.method == 'POST':
         flash("muvaffaqiyatli saqlandi")
         cur = mysql.connection.cursor()
