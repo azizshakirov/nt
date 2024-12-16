@@ -26,14 +26,14 @@ def insert():
 
     if request.method == 'POST':
         flash("muvaffaqiyatli saqlandi")
-        
+        cur = mysql.connection.cursor()
+
         name = request.form['name']
         email = request.form['email']
         phone = request.form['phone']
         student = (name, email, phone)
-
-        cur = mysql.connection.cursor()
-        cur.execute("INSERT INTO students (name, email, phone) VALUES (%s, %s, %s)", student)
+        query = f"INSERT INTO students (name, email, phone) VALUES (%s, %s, %s)"
+        cur.execute(query, student)
         return redirect(url_for('index'))
     
 
@@ -46,25 +46,21 @@ def update():
         name = request.form['name']
         email = request.form['email']
         phone = request.form['phone']
-        student = (id_data, name, email, phone)
-        # for i, stu in enumerate(students):
-        #     if stu[0] == int(id_data):
-        #         index = i
-        #         break
-        # students.pop(index)
-        # students.insert(index, student)
+        student = (name, email, phone, id_data)
+        cur = mysql.connection.cursor()
+        cur.execute("""
+            UPDATE students
+            SET name = %s, email = %s, phone = %s
+            WHERE id = %s
+        """, student)
         return redirect(url_for('index'))   
     
 
 @app.route('/delete/<string:id_data>', methods = ['GET'])
 def delete(id_data):
     flash("muvaffaqiyatli o\'chirildi")
-    # index = 0
-    # for i, stu in enumerate(students):
-    #         if stu[0] == int(id_data):
-    #             index = i
-    #             break
-    # students.pop(index)
+    cur = mysql.connection.cursor()
+    cur.execute("DELETE FROM students WHERE id = %s", [id_data])
     return redirect(url_for('index'))    
 
 if __name__ == "__main__":
